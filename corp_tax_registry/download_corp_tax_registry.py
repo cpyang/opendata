@@ -15,9 +15,9 @@
 # Version: 1.0
 # 
 # Import required modules
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import requests, requests.models
-import os,re,zipfile
+import os,re,zipfile,contextlib
 #ts=time.strftime('%Y%m%d%T%H%M%S')
 
 # Start a new web session
@@ -42,7 +42,7 @@ f.write(c.content)
 f.close()
 
 # Extract ZIP file
-with zipfile.ZipFile('corp_tax_registry.zip','r') as myzip:
+with contextlib.closing(zipfile.ZipFile('corp_tax_registry.zip','r')) as myzip:
     myzip.pwd='1234'
     filename = myzip.namelist()[0]
     myzip.extract(filename)
@@ -58,7 +58,7 @@ pattern = '|'.join(char_dict.keys())
 repl_func = lambda matchobj: char_dict[matchobj.group(0)]
 
 # Replace Big5 unsupported characters with question mark
-output = open('BGMOPEN2.csv', 'wb')
+output = open('corp_tax_registry.csv', 'wb')
 with open('BGMOPEN1.csv','rb') as f:
     for line in f:
         text = re.sub(pattern, repl_func, line)

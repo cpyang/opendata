@@ -1,5 +1,5 @@
 load data CHARACTERSET AL32UTF8
-infile 'BGMOPEN2.csv' "str '\n'"
+infile 'corp_tax_registry.csv' "str '\n'"
 append
 into table CORP_TAX_REGISTRY
 fields terminated by ';'
