@@ -3,6 +3,8 @@
 #
 # Get Corporate Tax Registration Data from Ministry of Finance
 # 財政部財政資訊中心 全國營業(稅籍)登記資料集
+# 	
+# Keywords: 營業稅, 稅籍資料
 #
 # 資料集描述	
 # 全國營業(稅籍)登記資料集。因考量營業稅歷年停歇業資料量太大，開啟檔案困難，故所開放檔案僅涵蓋營業中資料。 105年5月1日起檔案為壓縮檔，密碼為1234
@@ -28,7 +30,8 @@ url='http://data.gov.tw/node/9400'
 r=s.get(url)
 
 # Parse filename and URL from catalog
-soup=BeautifulSoup(r.content)
+#soup=BeautifulSoup(r.content,"lxml")
+soup=BeautifulSoup(r.content,"html.parser")
 urls=[tr.find('a').get('href').rsplit('dataUrl=')[1].rsplit('&')[0] for tr in soup.findAll('td',{'class':u'views-field views-field-field-resource-url-g 壓縮檔'})]
 
 # Check what we have to download
@@ -37,7 +40,7 @@ c=s.get(urls[0])
 
 # Write content to ZIP file
 filename='corp_tax_registry.zip' 
-f=open(filename,'w')
+f=open(filename,'wb')
 f.write(c.content)
 f.close()
 
