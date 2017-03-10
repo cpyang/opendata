@@ -45,7 +45,7 @@ f.write(c.content)
 f.close()
 
 # Extract ZIP file
-with contextlib.closing(zipfile.ZipFile('corp_tax_registry.zip','r')) as myzip:
+with contextlib.closing(zipfile.ZipFile('corp_tax_registry.zip','rb')) as myzip:
     myzip.pwd='1234'
     filename = myzip.namelist()[0]
     myzip.extract(filename)
@@ -61,8 +61,8 @@ pattern = '|'.join(char_dict.keys())
 repl_func = lambda matchobj: char_dict[matchobj.group(0)]
 
 # Replace Big5 unsupported characters with question mark
-output = open('corp_tax_registry.csv', 'wb')
-with open('BGMOPEN1.csv','rb') as f:
+output = open('corp_tax_registry.csv', 'w')
+with open('BGMOPEN1.csv','r') as f:
     for line in f:
         text = re.sub(pattern, repl_func, line)
         output.write(text)
