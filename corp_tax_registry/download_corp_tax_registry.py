@@ -18,7 +18,7 @@
 # 
 # Import required modules
 from bs4 import BeautifulSoup
-import requests, requests.models
+import requests, requests.models,datetime
 import os,re,zipfile,contextlib
 #ts=time.strftime('%Y%m%d%T%H%M%S')
 
@@ -45,7 +45,7 @@ f.write(c.content)
 f.close()
 
 # Extract ZIP file
-with contextlib.closing(zipfile.ZipFile('corp_tax_registry.zip','rb')) as myzip:
+with contextlib.closing(zipfile.ZipFile('corp_tax_registry.zip','r')) as myzip:
     myzip.pwd='1234'
     filename = myzip.namelist()[0]
     myzip.extract(filename)
@@ -61,11 +61,17 @@ pattern = '|'.join(char_dict.keys())
 repl_func = lambda matchobj: char_dict[matchobj.group(0)]
 
 # Replace Big5 unsupported characters with question mark
-output = open('corp_tax_registry.csv', 'w')
 with open('BGMOPEN1.csv','r') as f:
+    # Get date from first line
+    line = f.readline()
+    dt = datetime.datetime.strptime(re.search('(\d{2}-\w{3}-\d{2})$',line).group(0), "%d-%b-%y").strftime('%Y%m%d')
+    # Set output filename
+    output_filename = 'CORP_TAX_REGISTRY.%s' % (dt) 
+    output = open(output_filename, 'w')
+    # skip one line
+    next(f)
     for line in f:
         text = re.sub(pattern, repl_func, line)
         output.write(text)
-output.close()
-
+    output.close()
 
