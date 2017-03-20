@@ -65,7 +65,7 @@ with open('BGMOPEN1.csv','r') as f:
     # Get date from first line
     line = f.readline()
     dt = datetime.datetime.strptime(re.search('(\d{2}-\w{3}-\d{2})$',line).group(0), "%d-%b-%y").strftime('%Y%m%d')
-    # Set output filename
+    # Set output filename with date
     output_filename = 'CORP_TAX_REGISTRY.%s' % (dt) 
     output = open(output_filename, 'w')
     # skip one line
